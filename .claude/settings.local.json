@@ -4,7 +4,10 @@
       "Bash(npm --version)",
       "Bash(git --version)",
       "Bash(pnpm --version)",
-      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --app --eslint --no-src-dir --turbopack --import-alias \"@/*\" --use-npm --yes)"
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --app --eslint --no-src-dir --turbopack --import-alias \"@/*\" --use-npm --yes)",
+      "Bash(npx --yes shadcn@latest init --yes --base-color zinc)",
+      "Bash(npx --yes shadcn@latest init --help)",
+      "Bash(npx --yes shadcn@latest init -d -y)"
     ]
   }
 }
