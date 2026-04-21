@@ -1,0 +1,70 @@
+# =====================================================================
+# Render Blueprint — social-ai (Next.js 16 + Supabase + Inngest)
+# Ref : https://render.com/docs/infrastructure-as-code
+#
+# Déploiement :
+#   1. Push ce fichier sur GitHub.
+#   2. Sur render.com → New → Blueprint → sélectionne le repo.
+#   3. Render détecte ce fichier et propose de créer le service.
+#   4. Remplis les variables `sync: false` dans le dashboard (secrets).
+#   5. Premier build démarre tout seul.
+#
+# Note cold-start : plan `free` idle après 15 min sans requête. Le cron
+# Inngest (toutes les 10 min) suffit à garder le service chaud — pas
+# besoin de keep-alive externe.
+# =====================================================================
+
+services:
+  - type: web
+    name: social-ai
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true
+
+    envVars:
+      # ---- Runtime toggles ------------------------------------------
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+
+      # ---- Supabase -------------------------------------------------
+      # NEXT_PUBLIC_* : lus au build (inlinés dans le bundle client)
+      # ET au runtime. Les remplir dans le dashboard avant le 1er deploy.
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+
+      # ---- LLM providers --------------------------------------------
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CEREBRAS_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+
+      # ---- Infra ----------------------------------------------------
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: INNGEST_EVENT_KEY
+        sync: false
+      - key: INNGEST_SIGNING_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+
+      # ---- App URL (maj après 1er deploy : https://social-ai.onrender.com) --
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
