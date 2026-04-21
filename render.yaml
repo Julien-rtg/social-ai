@@ -21,7 +21,9 @@ services:
     plan: free
     region: frankfurt
     branch: master
-    buildCommand: npm ci && npm run build
+    # --include=dev : NODE_ENV=production fait sauter devDependencies par défaut,
+    # mais Tailwind/PostCSS/TypeScript sont devDeps ET nécessaires AU BUILD.
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm start
     healthCheckPath: /
     autoDeploy: true
